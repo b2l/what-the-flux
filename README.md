@@ -1,7 +1,7 @@
 # What the Flux?
 
 ## What is Flux?
-A Javascript application pattern.  
+A Javascript application pattern.
 Promoted by Facebook along with React
 
 ## Why Flux?
