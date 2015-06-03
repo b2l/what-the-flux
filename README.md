@@ -23,7 +23,6 @@ It dispatches the `actions` to the stores.
 Ensures that only one `action` is processed at a time
 
 It manages the dependencies between the stores
-(Example on dependencies?)
 
 ### Stores
 
@@ -82,14 +81,22 @@ Re-renders the view-tree with new data from the store
 
 ### Actions
 
-Contains a message with the payload being sent to the dispatcher
+An object with a name and a payload being sent to the dispatcher
 
-Wrapper into a helper to call from the view, like `addTodo(todoText)`
-*What are you trying to say here?*
+```
+{
+  type: 'ADD_TODO',
+  data: {
+    text: 'something'
+  }
+}
+```
 
 Actions are usually called from views, in response to event
 
 May also come from other places, i.e the server
+
+Use a wrapper to send the action to the dispatcherm like `addTodo('something')`
 
 ```
 var Actions = {
@@ -104,6 +111,9 @@ var Actions = {
     }
 
 }
+
+// Usage
+Actions.addTodo('something');
 ```
 
 ## Pitfalls & Patterns
@@ -174,10 +184,11 @@ saveTodo(action.data.text)
   });
 ```
 
-It is easier to read and reason about your store if they are synchronous.
-*Why?*
+Keep your store synchronous tend to reduce their complexity.
 
-Stores don't have to be coupled with the network layer(*backend service?*)
+It is easier to read, and your stores just represents your domain logic, not the architecture of your system.
+
+Stores don't have to be coupled with the network layer, they don't have to know about your backend API(*backend service?*)
 
 
 ### Store dependencies
@@ -195,9 +206,7 @@ FiltersStore.on('CHANGE', function(filter) {
 ```
 
 It is tempting to listen to another store than ours
-
-And mutate the state according to the dependency(*What are you trying to say
-here?*)
+and mutate our store state in response to this change
 
 #### What we should do
 
@@ -213,7 +222,7 @@ TodosStore.dispatchToken = Dispatcher.register(function(action) {
     switch(action.type) {
         case "FILTER":
             Dispatcher.waitFor(FiltersStore.dispatchToken);
-            /* Do your buisness */
+            /* Do your business */
             break;
     }
 
@@ -224,7 +233,7 @@ The actions are not advanced setters.
 
 Multiple stores can listen to the same action
 
-Handle the dependencies, or dispatch the order with `waitFor()`
+Handle the dependencies between your stores with `waitFor()`
 
 ### Actions
 
@@ -236,7 +245,7 @@ Actions.SHOW_NOTIFICATION
 Actions.FETCH_FROM_SERVER
 ```
 
-Actions should read like what they are doing:
+Actions should read like that "something that happened":
 ```
 Actions.TODO_CREATED_SUCCESS
 Actions.TODO_SYNC_REQUESTED
