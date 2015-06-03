@@ -1,35 +1,36 @@
 # What the Flux?
 
 ## What is Flux?
+
 A Javascript application pattern.
 Promoted by Facebook along with React
 
 ## Why Flux?
 
-* Easy to reason about
 * Predictable
 * Scalable
-* Easy to test
+* Easier to reason about
+* Easier to test
 
 ## Flux:
 
 ### Dispatcher
 
-It's the central hub of the application
+It is the central hub of the application.
 
-It just dispatch the actions to the stores
+It dispatches the `actions` to the stores.
 
-Ensure that only one action is processed at a time
+Ensures that only one `action` is processed at a time
 
-It manage the dependencies between stores
+It manages the dependencies between the stores
+(Example on dependencies?)
 
 ### Stores
 
-Represent a domain of your application
-
-Manage the state of this domain
-
-Broadcast an event when the state has changed
+A store:
+- Represents a domain of your application
+- Manages the state of that specific domain
+- Broadcasts an event when the state has changed
 
 ```
 todos = []
@@ -72,22 +73,23 @@ Dispatcher.register(function(action) {
 
 ### Views & Controller-Views
 
-Controller-views listen to store for changes
+Controller-views listens to the store for changes
 
-Query the store for its state/data
+Queries the store for it's data and state
 
-Re-render the view tree with the new data
+Re-renders the view-tree with new data from the store
 
 
 ### Actions
 
-Message with payload of data to send to the dispatcher
+Contains a message with the payload being sent to the dispatcher
 
 Wrapper into a helper to call from the view, like `addTodo(todoText)`
+*What are you trying to say here?*
 
-Actions are usually called from view in response to event
+Actions are usually called from views, in response to event
 
-May also come from other places, such as the server
+May also come from other places, i.e the server
 
 ```
 var Actions = {
@@ -106,9 +108,10 @@ var Actions = {
 
 ## Pitfalls & Patterns
 
-### Backend communication (Ajax)
+### Backend-communication (Ajax)
 
 #### What we usually do:
+
 ```
 TodosStore = {
     getTodos: function() {
@@ -129,13 +132,14 @@ Dispatcher.register(function(action) {
 });
 ```
 
-But now there is a mutation of our data without an action
+But now there is mutation of our data without an action
 
-Hard to debug
+Harder to debug
 
-Harder to reason about the app
+Harder to reason about the application
 
-#### Fire an action
+#### Firing an action
+
 ```
 Dispatcher.register(function(action) {
     switch(action.type) {
@@ -156,9 +160,9 @@ Dispatcher.register(function(action) {
 });
 ```
 
-Always fire an action at the end of an async request
+_Always_ fire an action at the end of an async-request
 
-#### Keep your store sync
+#### Keep your store synchronous
 
 ```
 saveTodo(action.data.text)
@@ -170,14 +174,15 @@ saveTodo(action.data.text)
   });
 ```
 
-It's a lot easier to read and to reason about your store if they are synchronous.
+It is easier to read and reason about your store if they are synchronous.
+*Why?*
 
-Stores don't have to be coupled with the network layer
+Stores don't have to be coupled with the network layer(*backend service?*)
 
 
 ### Store dependencies
 
-#### What we may do:
+#### What we might do:
 
 ```
 var FiltersStore = require('./filters_store');
@@ -189,9 +194,10 @@ FiltersStore.on('CHANGE', function(filter) {
 });
 ```
 
-Temptation to listen to another store
+It is tempting to listen to another store than ours
 
-And mutate the state according to the dependency
+And mutate the state according to the dependency(*What are you trying to say
+here?*)
 
 #### What we should do
 
@@ -214,33 +220,34 @@ TodosStore.dispatchToken = Dispatcher.register(function(action) {
 });
 ```
 
-The actions are not advanced setter.
+The actions are not advanced setters.
 
-Multiple store can listen to the same action
+Multiple stores can listen to the same action
 
-Handle the dependencies / dispatch order with waitFor()
+Handle the dependencies, or dispatch the order with `waitFor()`
 
 ### Actions
 
-#### Actions are neither command nor elaborate setters
+#### Actions are neither commands nor elaborate setters
 
-Those are commands:
+These are commands:
 ```
 Actions.SHOW_NOTIFICATION
 Actions.FETCH_FROM_SERVER
 ```
 
-Actions should be like newspaper:
+Actions should read like what they are doing:
 ```
 Actions.TODO_CREATED_SUCCESS
 Actions.TODO_SYNC_REQUESTED
 ```
 
-Actions represent the changes in your app
+Actions represent the changes in your application
 
-If your action are named and represent a change, you can easily debug your app when there is a problem.
+If your action is named and represent a change, you can easily debug your
+application when there is a problem.
 
-Or work on a new part and make change with confidence.
+Or work in a new part and make changes with confidence.
 
 ```
 TODO_CREATED "something"
@@ -252,4 +259,4 @@ TODO_CREATED ""
 TODO_CREATION_ERROR "empty text"
 ```
 
-Inspired by  @JeremyMorell talk: Those who forget the past...  are doomed to debug it
+Inspired by  @JeremyMorell talk: `Those who forget the past...are doomed to debug it`
